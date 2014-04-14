@@ -1,10 +1,11 @@
-<?php 
+<?php
 
 class CommentParserTest extends TestCase {
 
     public function testCommentTagsAreParsed()
     {
-        $parser = new EntityMapper\Parser\CommentParser( $this->getComment() );
+        $parser = new ParserStub;
+        $parser->parse( $this->getComment() );
 
         $tags = $parser->getTags();
 
@@ -29,4 +30,16 @@ class CommentParserTest extends TestCase {
  */
 COMMENT;
     }
-} 
+}
+
+
+class ParserStub {
+    use EntityMapper\Parser\CommentParser;
+
+    public function parse($comment)
+    {
+        $comment = $this->cleanInput($comment);
+        $tags = $this->splitComment($comment);
+        $this->tags = $this->parseTags($tags);
+    }
+}

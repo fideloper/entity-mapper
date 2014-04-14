@@ -1,24 +1,22 @@
 <?php namespace EntityMapper\Parser;
 
-class CommentParser {
+/**
+ * Parse Comment "Tags"
+ * Usage:
+ * $comment = $this->cleanInput($comment);
+ * $tags = $this->splitComment($comment);
+ * $this->tags = $this->parseTags($tags);
+ *
+ * Class CommentParser
+ * @package EntityMapper\Parser
+ */
+trait CommentParser {
 
     /**
      * Tags
      * @var array
      */
     protected $tags;
-
-    /**
-     * Parse a comment to retrieve its tags
-     * @param string $comment
-     */
-    public function __construct($comment)
-    {
-        $comment = $this->cleanInput($comment);
-        list($short, $long, $tags) = $this->splitComment($comment);
-
-        $this->tags = $this->parseTags($tags);
-    }
 
     /**
      * Get an associate array of tags
@@ -118,7 +116,9 @@ class CommentParser {
         while (count($matches) < 3) {
             $matches[] = '';
         }
-        return $matches;
+
+        // Return only tags
+        return $matches[2];
     }
 
     /**
