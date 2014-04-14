@@ -11,21 +11,19 @@ class TableParser {
         $comment = $class->getDocComment();
         $comment = $this->cleanInput($comment);
         $tags = $this->splitComment($comment);
-        $this->tags = $this->parseTags($tags);
+        $tags = $this->parseTags($tags);
 
-        $tableName = $this->getTable($class);
-        $repository = $this->getRepository($class);
+        $tableName = $this->getTable($tags, $class);
+        $repository = $this->getRepository($tags, $class);
 
         return new Table($tableName, $repository);
     }
 
-    protected function getTable(ReflectionClass $class)
+    protected function getTable($tags, $class)
     {
-        if( ! is_null($this->table) ) return $this->table;
-
-        if( isset($this->tags['table']) )
+        if( isset($tags['table']) )
         {
-            $table = $this->tags['table'];
+            $table = $tags['table'];
         } else {
             $table = $this->camelToUnderscore( $class->getShortName() );
         }
@@ -33,13 +31,11 @@ class TableParser {
         return $table;
     }
 
-    protected function getRepository(ReflectionClass $class)
+    protected function getRepository($tags, $class)
     {
-        if( ! is_null($this->repository) ) return $this->repository;
-
-        if( isset($this->tags['repository']) )
+        if( isset($tags['repository']) )
         {
-            $repository = $this->tags['repository'];
+            $repository = $tags['repository'];
         } else {
             // Some way to signify its a default
             $repository = $class->getShortName().'Repository';
@@ -47,18 +43,4 @@ class TableParser {
 
         return $repository;
     }
-
-    /**
-     * Convert CamelCaseClassName to underscore_class_name
-     * The Underscore style class name is what we'll be
-     * assuming is used for database table names
-     * @param string $camelCase
-     * @return string
-     */
-    protected function camelToUnderscore($camelCase)
-    {
-        return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camelCase));
-    }
-
-
 } 

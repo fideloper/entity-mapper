@@ -13,21 +13,6 @@
 trait CommentParser {
 
     /**
-     * Tags
-     * @var array
-     */
-    protected $tags;
-
-    /**
-     * Get an associate array of tags
-     * @return array
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
      * Strips the asterisks from the DocBlock comment.
      *
      * @param string $comment String containing the comment text.
@@ -165,5 +150,17 @@ trait CommentParser {
         }
 
         return $final;
+    }
+
+    /**
+     * Convert CamelCaseClassName to underscore_class_name
+     * The Underscore style class name is what we'll be
+     * assuming is used for database table names
+     * @param string $camelCase
+     * @return string
+     */
+    protected function camelToUnderscore($camelCase)
+    {
+        return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camelCase));
     }
 } 
