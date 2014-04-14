@@ -1,0 +1,20 @@
+{
+    "name": "fideloper/entity-mapper",
+    "description": "An Entity Mapping ORM",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "fideloper",
+            "email": "fideloper@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+
+    },
+    "autoload": {
+        "psr-0": {
+            "EntityMapper":"src/"
+        }
+    }
+}
