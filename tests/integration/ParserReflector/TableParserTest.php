@@ -27,7 +27,7 @@ class TableParserTest extends TestCase {
 
         $this->assertInstanceof( '\EntityMapper\Reflector\Table', $table );
         $this->assertEquals( 'no_comment_stub', $table->name() );
-        $this->assertEquals( 'NoCommentStubRepository', $table->repository() );
+        $this->assertEquals( 'base', $table->repository() );
     }
 
 

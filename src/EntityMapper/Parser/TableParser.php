@@ -15,7 +15,7 @@ class TableParser implements ParserInterface {
         $tags = $this->parseTags($tags);
 
         $tableName = $this->getTable($tags, $class);
-        $repository = $this->getRepository($tags, $class);
+        $repository = $this->getRepository($tags);
 
         return new Table($tableName, $repository);
     }
@@ -32,14 +32,14 @@ class TableParser implements ParserInterface {
         return $table;
     }
 
-    protected function getRepository($tags, $class)
+    protected function getRepository($tags)
     {
         if( isset($tags['repository']) )
         {
             $repository = $tags['repository'];
         } else {
             // Some way to signify its a default
-            $repository = $class->getShortName().'Repository';
+            $repository = 'base';
         }
 
         return $repository;
