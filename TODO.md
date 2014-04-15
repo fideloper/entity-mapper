@@ -3,3 +3,4 @@
 3. Repository needs creating (using Illuminate\Database).
     * Dynamically create a repository for a table/model
     * Or use classes defined Repository
+4. Relationships, making use of Eloquent's relationship builders.
