@@ -34,7 +34,7 @@ class EntityMapper {
     public function hydrate($entityClassName, $data)
     {
         $inflectedEntity = $this->getEntity($entityClassName);
-        $inflectedEntity->
+        //$inflectedEntity->
 
         return $this->doHydrate($entityClassName, $inflectedEntity, $data);
     }

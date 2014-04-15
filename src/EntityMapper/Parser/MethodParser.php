@@ -1,7 +1,9 @@
 <?php  namespace EntityMapper\Parser; 
 
+
 use ReflectionClass;
 use ReflectionMethod;
+use EntityMapper\Reflector\MethodCollection;
 use EntityMapper\Reflector\GetterMethod;
 use EntityMapper\Reflector\SetterMethod;
 
@@ -9,10 +11,12 @@ class MethodParser implements ParserInterface {
 
     use CommentParser;
 
-    protected $getSets = [
-        'getters' => [],
-        'setters' => [],
-    ];
+    protected $methodCollection;
+
+    public function __construct()
+    {
+        $this->methodCollection = new MethodCollection();
+    }
 
     public function parse(ReflectionClass $class)
     {
@@ -25,11 +29,11 @@ class MethodParser implements ParserInterface {
     {
         foreach( $methods as $method )
         {
-            // This populates $this->getSets
+            // This populates $this->methodCollection
             $this->parseMethod( $method );
         }
 
-        return $this->getSets;
+        return $this->methodCollection;
     }
 
     /**
@@ -51,13 +55,13 @@ class MethodParser implements ParserInterface {
         if( $isSetter )
         {
             $setterMethod = new SetterMethod( $method->getShortName(), $tags['setter'] );
-            $this->getSets['setters'][$setterMethod->variable()] = $setterMethod;
+            $this->methodCollection->addSetter($setterMethod->variable(), $setterMethod);
         }
 
         if( $isGetter )
         {
             $getterMethod = new GetterMethod( $method->getShortName(), $tags['getter'] );
-            $this->getSets['getters'][$getterMethod->variable()] = $getterMethod;
+            $this->methodCollection->addGetter($getterMethod->variable(), $getterMethod);
         }
     }
 

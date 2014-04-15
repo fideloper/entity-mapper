@@ -42,11 +42,10 @@ class ClassInflector {
     {
         $reflectClass = new ReflectionClass($entity);
 
-        return new Entity(
-            $entity,
-            $this->tableParser->parse( $reflectClass ),
-            $this->columnParser->parse( $reflectClass ),
-            $this->methodParser->parse( $reflectClass )
-        );
+        $table = $this->tableParser->parse( $reflectClass );
+        $table->setColumns( $this->columnParser->parse( $reflectClass ) );
+        $table->setMethods( $this->methodParser->parse( $reflectClass ) );
+
+        return $table;
     }
 } 

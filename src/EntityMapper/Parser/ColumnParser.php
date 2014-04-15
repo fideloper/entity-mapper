@@ -1,5 +1,6 @@
 <?php  namespace EntityMapper\Parser; 
 
+use EntityMapper\Reflector\ColumnCollection;
 use ReflectionClass;
 use ReflectionProperty;
 use EntityMapper\Reflector\Column;
@@ -28,7 +29,7 @@ class ColumnParser implements ParserInterface {
 
     protected function parseAttributes( Array $properties )
     {
-        $columns = [];
+        $columns = new ColumnCollection;
         foreach( $properties as $property )
         {
             $column = $this->parseAttribute( $property );
@@ -37,7 +38,7 @@ class ColumnParser implements ParserInterface {
             // properly defined and with a column name
             if( ! is_null($column) )
             {
-                $columns[$column->variable()] = $column;
+                $columns->addColumn($column->variable(), $column);
             }
         }
 
@@ -52,12 +53,12 @@ class ColumnParser implements ParserInterface {
         $tags = $this->parseTags($tags);
 
         // Bail out if there's no column name defined
-        if( ! isset($tags['column']) || is_null($tags['column']) )
+        if( ! array_key_exists('column', $tags) )
         {
             return null;
         }
 
-        $columnName = $tags['column'];
+        $columnName = $this->getName($tags);
         $variableName = $property->getName();
         $type = $this->getType( $tags, $property );
         $isId = $this->getIsId( $tags );
@@ -113,6 +114,16 @@ class ColumnParser implements ParserInterface {
     protected function getIsValueObject($type)
     {
         return class_exists($type);
+    }
+
+    protected function getName($tags)
+    {
+        if( is_null($tags['column']) || empty($tags['column']) )
+        {
+            throw new \DomainException('Column name must be defined');
+        }
+
+        return $tags['column'];
     }
 
 

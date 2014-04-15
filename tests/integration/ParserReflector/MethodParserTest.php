@@ -11,9 +11,9 @@ class MethodParserTest extends TestCase {
 
         $methods = $parser->parse($reflectionClass);
 
-        $this->assertTrue( is_array($methods) );
-        $this->assertEquals( 'setVotes', $methods['setters']['votes']->method() );
-        $this->assertEquals( 'votes', $methods['setters']['votes']->variable() );
+        $this->assertInstanceof( '\EntityMapper\Reflector\MethodCollection', $methods );
+        $this->assertEquals( 'setVotes', $methods->setter('votes')->method() );
+        $this->assertEquals( 'votes', $methods->setter('votes')->variable() );
     }
 
     public function testGetterAndSetterMethodsIsParsed()
@@ -23,12 +23,12 @@ class MethodParserTest extends TestCase {
 
         $methods = $parser->parse($reflectionClass);
 
-        $this->assertTrue( is_array($methods) );
+        $this->assertInstanceof( '\EntityMapper\Reflector\MethodCollection', $methods );
 
-        $this->assertEquals( 'id', $methods['setters']['id']->method() );
-        $this->assertEquals( 'id', $methods['setters']['id']->variable() );
+        $this->assertEquals( 'id', $methods->setter('id')->method() );
+        $this->assertEquals( 'id', $methods->setter('id')->variable() );
 
-        $this->assertEquals( 'id', $methods['getters']['id']->method() );
-        $this->assertEquals( 'id', $methods['getters']['id']->variable() );
+        $this->assertEquals( 'id', $methods->getter('id')->method() );
+        $this->assertEquals( 'id', $methods->getter('id')->variable() );
     }
 }
