@@ -1,6 +1,6 @@
 {
     "name": "fideloper/entity-mapper",
-    "description": "An Entity Mapping ORM",
+    "description": "An Entity Mapping ORM, building on Illuminate/Database",
     "license": "MIT",
     "authors": [
         {
@@ -10,11 +10,11 @@
     ],
     "minimum-stability": "dev",
     "require": {
-
+        "illuminate/database": "4.2.*"
     },
     "autoload": {
         "psr-0": {
-            "EntityMapper":"src/"
+            "EntityMapper": "src/"
         }
     }
 }
