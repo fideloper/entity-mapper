@@ -1,31 +1,31 @@
-<?php  namespace EntityMapper\Parser; 
+<?php  namespace EntityMapper\Reflector;
 
 class Column {
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      */
-    private $variableName;
+    protected $variableName;
 
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @var bool
      */
-    private $isId;
+    protected $isId;
 
     /**
      * @var bool
      */
-    private $isValueObject;
+    protected $isValueObject;
 
     public function __construct($name, $variableName, $type, $isId, $isValueObject)
     {
@@ -41,7 +41,7 @@ class Column {
         return $this->name;
     }
 
-    public function variableName()
+    public function variable()
     {
         return $this->variableName;
     }

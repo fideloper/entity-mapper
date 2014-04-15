@@ -7,23 +7,17 @@
 class User {
 
     /**
-     * @id
+     * @id auto
      * @column id
      * @var integer
      */
     protected $id;
 
     /**
-     * @column name
+     * @column username
      * @var string
      */
     protected $name;
-
-    /**
-     * @column password
-     * @var string
-     */
-    protected $password;
 
     /**
      * @column email
@@ -32,29 +26,48 @@ class User {
     protected $email;
 
     /**
-     * A cheap test to ensure
-     * setter used when attributes added
-     * via reflection
-     * (Or should we always assume constructor arguments??)
-     * @var bool
+     * @column votes
+     * @var \Votes
      */
-    public $setEmailViaSetter = false;
+    protected $votes;
 
-    public function __construct($name, $password, Email $email, $id=null)
+    public function __construct($name, Email $email, $votes=null, $id=null)
     {
         $this->name = $name;
-        $this->password = $password;
-        $this->setEmail($email);
-        $this->id = $id;
+        $this->email = $email;
+        $this->setVotes($votes);
+        $this->id($id);
     }
 
     /**
-     * Set user email address
-     * @param $email
+     * This is a setter with some logic
+     * @setter votes
+     * @param $votes
      */
-    public function setEmail($email)
+    public function setVotes($votes)
     {
-        $this->setEmailViaSetter = true;
-        $this->email = $email;
+        if( ! $votes instanceof Votes )
+        {
+            $votes = new Votes($votes);
+        }
+
+        $this->votes = $votes;
+    }
+
+    /**
+     * This is both a getter and setter
+     * @getter id
+     * @setter id
+     * @param null $id
+     * @return null
+     */
+    public function id($id=null)
+    {
+        if( is_null($id) )
+        {
+            return $id;
+        }
+
+        $this->id = $id;
     }
 } 

@@ -1,4 +1,4 @@
-<?php  namespace EntityMapper\Parser; 
+<?php  namespace EntityMapper\Reflector;
 
 class Table {
 

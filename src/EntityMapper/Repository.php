@@ -10,7 +10,7 @@ class Repository {
         // And hydrate from result
     }
 
-    public function __callStatic()
+    public static function __callStatic($name, $arguments)
     {
         //if getXRepository, parse "X" and return repository (static) for that model class
     }

@@ -5,9 +5,7 @@ class CommentParserTest extends TestCase {
     public function testCommentTagsAreParsed()
     {
         $parser = new ParserStub;
-        $parser->parse( $this->getComment() );
-
-        $tags = $parser->getTags();
+        $tags = $parser->parse( $this->getComment() );
 
         $this->assertTrue(is_array($tags));
         $this->assertEquals(3, count($tags));
@@ -40,6 +38,6 @@ class ParserStub {
     {
         $comment = $this->cleanInput($comment);
         $tags = $this->splitComment($comment);
-        $this->tags = $this->parseTags($tags);
+        return $this->parseTags($tags);
     }
 }

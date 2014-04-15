@@ -1,8 +1,9 @@
 <?php  namespace EntityMapper\Parser; 
 
 use ReflectionClass;
+use EntityMapper\Reflector\Table;
 
-class TableParser {
+class TableParser implements ParserInterface {
 
     use CommentParser;
 

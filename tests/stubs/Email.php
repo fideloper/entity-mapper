@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Email {
 
@@ -6,6 +6,25 @@ class Email {
 
     public function __construct($email)
     {
-        $this->email = $email;
+        $this->setEmail($email);
     }
+
+    protected function setEmail($email)
+    {
+        if( filter_var($email, FILTER_VALIDATE_EMAIL) )
+        {
+            throw new \InvalidArgumentException('Valid email required');
+        }
+    }
+
+    public function getEmail()
+    {
+        return $this->email();
+    }
+
+    public function __toString()
+    {
+        return $this->getEmail();
+    }
+
 } 

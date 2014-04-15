@@ -2,13 +2,25 @@
 
 use ReflectionClass;
 use ReflectionProperty;
+use EntityMapper\Reflector\Column;
 
-class ColumnParser {
+class ColumnParser implements ParserInterface {
 
     use CommentParser;
 
-    public function parse(ReflectionClass $class)
+    /**
+     * A concrete class instance
+     * @var mixed
+     */
+    protected $concreteClass;
+
+    public function parse(ReflectionClass $class, $concreteClass=null)
     {
+        if( is_object($concreteClass) )
+        {
+            $this->concreteClass = $concreteClass;
+        }
+
         $properties = $class->getProperties();
 
         return $this->parseAttributes( $properties );
@@ -19,7 +31,14 @@ class ColumnParser {
         $columns = [];
         foreach( $properties as $property )
         {
-            $columns[] = $this->parseAttribute( $property );
+            $column = $this->parseAttribute( $property );
+
+            // Only of Property has the @column definition
+            // properly defined and with a column name
+            if( ! is_null($column) )
+            {
+                $columns[$column->variable()] = $column;
+            }
         }
 
         return $columns;
@@ -32,25 +51,19 @@ class ColumnParser {
         $tags = $this->splitComment($comment);
         $tags = $this->parseTags($tags);
 
-        $columnName = $this->getColumnName( $tags, $property );
+        // Bail out if there's no column name defined
+        if( ! isset($tags['column']) || is_null($tags['column']) )
+        {
+            return null;
+        }
+
+        $columnName = $tags['column'];
         $variableName = $property->getName();
         $type = $this->getType( $tags, $property );
         $isId = $this->getIsId( $tags );
-        $isValueObject = $this->getIsValueObject( $tags, $property );
+        $isValueObject = $this->getIsValueObject( $type );
 
         return new Column($columnName, $variableName, $type, $isId, $isValueObject);
-    }
-
-    protected function getColumnName(Array $tags, ReflectionProperty $property)
-    {
-        if( isset($tags['column']) )
-        {
-            $name = $tags['column'];
-        } else {
-            $name = $this->camelToUnderscore( $property->getName() );
-        }
-
-        return $name;
     }
 
     protected function getType($tags, ReflectionProperty $property)
@@ -73,7 +86,11 @@ class ColumnParser {
      */
     protected function guessType(ReflectionProperty $property)
     {
-        $propertyValue = $property->getValue();
+        // Guess a string if we can't tell
+        if( is_null($this->concreteClass) ) return 'string';
+
+        $property->setAccessible(true);
+        $propertyValue = $property->getValue( $this->concreteClass );
 
         if( is_null($propertyValue) || empty($propertyValue) )
         {
