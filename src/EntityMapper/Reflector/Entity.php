@@ -15,7 +15,7 @@ class Entity {
     /**
      * @var PropertyCollection
      */
-    protected $columns;
+    protected $properties;
 
     /**
      * @var MethodCollection
@@ -38,9 +38,9 @@ class Entity {
         return $this->repository;
     }
 
-    public function columns()
+    public function properties()
     {
-        return $this->columns;
+        return $this->properties;
     }
 
     public function methods()
@@ -48,9 +48,9 @@ class Entity {
         return $this->methods;
     }
 
-    public function setColumns(PropertyCollection $columns)
+    public function setProperties(PropertyCollection $properties)
     {
-        $this->columns = $columns;
+        $this->properties = $properties;
 
         return $this;
     }

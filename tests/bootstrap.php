@@ -21,6 +21,9 @@ $capsule->addConnection([
 // what the docs say
 $capsule->setAsGlobal();
 
+$app = $capsule->getContainer();
+$app['config']['database.fetch'] = PDO::FETCH_CLASS;
+
 $capsule->schema()->create('users', function($table)
 {
     $table->increments('id');

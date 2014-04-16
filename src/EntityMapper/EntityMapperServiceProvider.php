@@ -18,10 +18,5 @@ class EntityMapperServiceProvider extends ServiceProvider {
         {
             return new EntityCache( $app->make('\EntityMapper\ClassInflector') );
         });
-
-        $this->app->bind('\EntityMapper\EntityMapper', function($app)
-        {
-            return new EntityMapper( $app->make('\EntityMapper\Cache\EntityCache') );
-        });
     }
 } 

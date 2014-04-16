@@ -82,11 +82,23 @@ class Repository {
     }
 
     /**
-     * Get new Query Builder
-     * To build entities
+     * Get new Query Builder to build
+     * entities for Select operations
      * @return Builder
      */
     public function query()
+    {
+        $builder = new Builder( $this->newBaseQueryBuilder(), $this->entity, $this->mapper );
+        $builder->setTable( $this->entity->table() );
+        return $builder;
+    }
+
+    /**
+     * Get new Query Builder prepared
+     * for insert, update and deletions
+     * @return Builder
+     */
+    public function writeQuery()
     {
         return new Builder( $this->newBaseQueryBuilder(), $this->entity, $this->mapper );
     }
@@ -169,16 +181,13 @@ class Repository {
     public static function getRepository($entityClassName)
     {
         $app = static::getApp();
+
+        $entity = $app->make('\EntityMapper\Cache\EntityCache')->get($entityClassName);
         $entityMapper = $app->make('\EntityMapper\EntityMapper');
 
-        // Determine if the entity declares a specific repository
-        // TODO: This is called twice, and if not cached, it's a slow process. Code smell?
-        // -- Also called in EntityMapper
-        $table = $app->make('\EntityMapper\Cache\EntityCache')->get($entityClassName);
-
         // Set repository and its dependencies
-        $repository = ($table->repository() === 'base') ? new static : $app->make($table->repository());
-        $repository->setEntity($entityClassName);
+        $repository = ($entity->repository() === 'base') ? new static : $app->make($entity->repository());
+        $repository->setEntity($entity);
         $repository->setMapper($entityMapper);
 
         return $repository;

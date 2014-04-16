@@ -19,7 +19,7 @@ class ClassInflector {
     /**
      * @var Parser\PropertyParser
      */
-    protected $columnParser;
+    protected $propertyParser;
     /**
      * @var Parser\MethodParser
      */
@@ -28,13 +28,13 @@ class ClassInflector {
     /**
      * Create Entity Inflector
      * @param Parser\EntityParser $entityParser
-     * @param Parser\PropertyParser $columnParser
+     * @param Parser\PropertyParser $propertyParser
      * @param Parser\MethodParser $methodParser
      */
-    public function __construct(EntityParser $entityParser, PropertyParser $columnParser, MethodParser $methodParser)
+    public function __construct(EntityParser $entityParser, PropertyParser $propertyParser, MethodParser $methodParser)
     {
         $this->entityParser = $entityParser;
-        $this->columnParser = $columnParser;
+        $this->propertyParser = $propertyParser;
         $this->methodParser = $methodParser;
     }
 
@@ -43,7 +43,7 @@ class ClassInflector {
         $reflectClass = new ReflectionClass($entity);
 
         $entity = $this->entityParser->parse( $reflectClass );
-        $entity->setColumns( $this->columnParser->parse( $reflectClass ) );
+        $entity->setProperties( $this->propertyParser->parse( $reflectClass ) );
         $entity->setMethods( $this->methodParser->parse( $reflectClass ) );
 
         return $entity;

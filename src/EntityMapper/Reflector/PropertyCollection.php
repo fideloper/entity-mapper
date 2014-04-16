@@ -8,7 +8,7 @@ class PropertyCollection extends Collection {
      * Get the Primary ID column
      * @return PropertyCollection
      */
-    public function isProperty()
+    public function idProperty()
     {
         foreach( $this->items as $property )
         {
