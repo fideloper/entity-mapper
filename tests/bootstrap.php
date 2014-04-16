@@ -17,7 +17,7 @@ $capsule->addConnection([
     'prefix'   => '',
 ]);
 
-// Not actually required, despite
+// Actually required, despite
 // what the docs say
 $capsule->setAsGlobal();
 
