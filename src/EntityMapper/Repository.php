@@ -177,7 +177,7 @@ class Repository {
         $table = $app->make('\EntityMapper\Cache\EntityCache')->get($entityClassName);
 
         // Set repository and its dependencies
-        $repository = ($table->repository === 'base') ? new static : $app->make($table->repository);
+        $repository = ($table->repository() === 'base') ? new static : $app->make($table->repository());
         $repository->setEntity($entityClassName);
         $repository->setMapper($entityMapper);
 

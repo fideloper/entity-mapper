@@ -1,6 +1,5 @@
-<?php  namespace EntityMapper; 
+<?php  namespace EntityMapper;
 
-use EntityMapper\EntityMapper;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 
 class Builder {
@@ -27,9 +26,43 @@ class Builder {
         $this->entityMapper = $entityMapper;
     }
 
+    public function find($id, $columns = ['*'])
+    {
+        if (is_array($id))
+        {
+            return $this->findMany($id, $columns);
+        }
+
+        // Need to get ID column
+        $this->query->where($this->model->getKeyName(), '=', $id);
+
+        return $this->first($columns);
+    }
+
     public function findMany(array $id, $columns = ['*'])
     {
+        if (empty($id)) return new Collection;
 
+        // Need to get ID column
+        $this->query->whereIn($this->model->getKeyName(), $id);
+
+        return $this->get($columns);
+    }
+
+    /**
+     * Execute the query and get the first result.
+     *
+     * @param  array  $columns
+     * @return \Illuminate\Database\Eloquent\Model|static|null
+     */
+    public function first($columns = array('*'))
+    {
+        return $this->take(1)->get($columns)->first();
+    }
+
+    public function get($columns = ['*'])
+    {
+        return $this->builder->get($columns);
     }
 
     /**
