@@ -1,13 +1,13 @@
 <?php  namespace EntityMapper;
 
-use Illuminate\Database\Query\Builder as BaseBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Builder {
 
     /**
      * @var \Illuminate\Database\Query\Builder
      */
-    protected $builder;
+    protected $query;
 
     /**
      * @var mixed
@@ -19,9 +19,9 @@ class Builder {
      */
     private $entityMapper;
 
-    public function __construct(BaseBuilder $builder, $entityClassName, EntityMapper $entityMapper)
+    public function __construct(QueryBuilder $query, $entityClassName, EntityMapper $entityMapper)
     {
-        $this->builder = $builder;
+        $this->query = $query;
         $this->entityClassName = $entityClassName;
         $this->entityMapper = $entityMapper;
     }
@@ -62,7 +62,7 @@ class Builder {
 
     public function get($columns = ['*'])
     {
-        return $this->builder->get($columns);
+        return $this->query->get($columns);
     }
 
     /**

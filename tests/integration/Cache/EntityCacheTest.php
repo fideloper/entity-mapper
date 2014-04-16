@@ -2,9 +2,9 @@
 
 use EntityMapper\Cache\EntityCache;
 use EntityMapper\ClassInflector;
-use EntityMapper\Parser\ColumnParser;
+use EntityMapper\Parser\PropertyParser;
 use EntityMapper\Parser\MethodParser;
-use EntityMapper\Parser\TableParser;
+use EntityMapper\Parser\EntityParser;
 
 class EntityCacheTest extends TestCase {
 
@@ -13,18 +13,18 @@ class EntityCacheTest extends TestCase {
         $cache = $this->getCache();
 
         // This only works because we haven't implemented a real cache yet
-        $table = $cache->get('\User');
+        $entity = $cache->get('\User');
 
-        $this->assertInstanceof( '\EntityMapper\Reflector\Table', $table );
-        $this->assertEquals( 'users', $table->name() );
+        $this->assertInstanceof( '\EntityMapper\Reflector\Entity', $entity );
+        $this->assertEquals( 'users', $entity->table() );
     }
 
     protected function getCache()
     {
         return new EntityCache(
             new ClassInflector(
-                new TableParser,
-                new ColumnParser,
+                new EntityParser,
+                new PropertyParser,
                 new MethodParser)
         );
     }

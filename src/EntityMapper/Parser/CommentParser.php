@@ -154,7 +154,7 @@ trait CommentParser {
 
     /**
      * Convert CamelCaseClassName to underscore_class_name
-     * The Underscore style class name is what we'll be
+     * The Underscore style class table is what we'll be
      * assuming is used for database table names
      * @param string $camelCase
      * @return string

@@ -1,6 +1,6 @@
 <?php  namespace EntityMapper\Reflector;
 
-class Column {
+class Property {
 
     /**
      * @var string

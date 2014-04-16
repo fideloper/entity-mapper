@@ -1,9 +1,9 @@
 <?php  namespace EntityMapper\Parser; 
 
 use ReflectionClass;
-use EntityMapper\Reflector\Table;
+use EntityMapper\Reflector\Entity;
 
-class TableParser implements ParserInterface {
+class EntityParser implements ParserInterface {
 
     use CommentParser;
 
@@ -17,7 +17,7 @@ class TableParser implements ParserInterface {
         $tableName = $this->getTable($tags, $class);
         $repository = $this->getRepository($tags);
 
-        return new Table($tableName, $repository);
+        return new Entity($tableName, $repository);
     }
 
     protected function getTable($tags, $class)

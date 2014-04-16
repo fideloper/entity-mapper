@@ -1,11 +1,11 @@
 <?php  namespace EntityMapper\Reflector;
 
-class Table {
+class Entity {
 
     /**
      * @var string
      */
-    protected $name;
+    protected $table;
 
     /**
      * @var string
@@ -13,7 +13,7 @@ class Table {
     protected $repository;
 
     /**
-     * @var ColumnCollection
+     * @var PropertyCollection
      */
     protected $columns;
 
@@ -22,15 +22,15 @@ class Table {
      */
     protected $methods;
 
-    public function __construct($name, $repository)
+    public function __construct($table, $repository)
     {
-        $this->name = $name;
+        $this->table = $table;
         $this->repository = $repository;
     }
 
-    public function name()
+    public function table()
     {
-        return $this->name;
+        return $this->table;
     }
 
     public function repository()
@@ -48,7 +48,7 @@ class Table {
         return $this->methods;
     }
 
-    public function setColumns(ColumnCollection $columns)
+    public function setColumns(PropertyCollection $columns)
     {
         $this->columns = $columns;
 

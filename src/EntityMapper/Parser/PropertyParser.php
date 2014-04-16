@@ -1,11 +1,11 @@
 <?php  namespace EntityMapper\Parser; 
 
-use EntityMapper\Reflector\ColumnCollection;
+use EntityMapper\Reflector\PropertyCollection;
 use ReflectionClass;
 use ReflectionProperty;
-use EntityMapper\Reflector\Column;
+use EntityMapper\Reflector\Property;
 
-class ColumnParser implements ParserInterface {
+class PropertyParser implements ParserInterface {
 
     use CommentParser;
 
@@ -24,25 +24,25 @@ class ColumnParser implements ParserInterface {
 
         $properties = $class->getProperties();
 
-        return $this->parseAttributes( $properties );
+        return $this->parseProperties( $properties );
     }
 
-    protected function parseAttributes( Array $properties )
+    protected function parseProperties( Array $properties )
     {
-        $columns = new ColumnCollection;
+        $propertyCollection = new PropertyCollection;
         foreach( $properties as $property )
         {
             $column = $this->parseAttribute( $property );
 
             // Only of Property has the @column definition
-            // properly defined and with a column name
+            // properly defined and with a column table
             if( ! is_null($column) )
             {
-                $columns->addColumn($column->variable(), $column);
+                $propertyCollection->addProperty($column->variable(), $column);
             }
         }
 
-        return $columns;
+        return $propertyCollection;
     }
 
     protected function parseAttribute( ReflectionProperty $property )
@@ -52,7 +52,7 @@ class ColumnParser implements ParserInterface {
         $tags = $this->splitComment($comment);
         $tags = $this->parseTags($tags);
 
-        // Bail out if there's no column name defined
+        // Bail out if there's no column table defined
         if( ! array_key_exists('column', $tags) )
         {
             return null;
@@ -64,7 +64,7 @@ class ColumnParser implements ParserInterface {
         $isId = $this->getIsId( $tags );
         $isValueObject = $this->getIsValueObject( $type );
 
-        return new Column($columnName, $variableName, $type, $isId, $isValueObject);
+        return new Property($columnName, $variableName, $type, $isId, $isValueObject);
     }
 
     protected function getType($tags, ReflectionProperty $property)
@@ -120,7 +120,7 @@ class ColumnParser implements ParserInterface {
     {
         if( is_null($tags['column']) || empty($tags['column']) )
         {
-            throw new \DomainException('Column name must be defined');
+            throw new \DomainException('Property table must be defined');
         }
 
         return $tags['column'];

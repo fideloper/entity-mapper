@@ -1,7 +1,8 @@
 <?php  namespace EntityMapper;
 
+use EntityMapper\Parser\EntityParser;
 use ReflectionClass;
-use EntityMapper\Parser\ColumnParser;
+use EntityMapper\Parser\PropertyParser;
 use EntityMapper\Parser\MethodParser;
 use EntityMapper\Parser\TableParser;
 
@@ -13,11 +14,11 @@ use EntityMapper\Parser\TableParser;
 class ClassInflector {
 
     /**
-     * @var Parser\TableParser
+     * @var Parser\EntityParser
      */
-    protected $tableParser;
+    protected $entityParser;
     /**
-     * @var Parser\ColumnParser
+     * @var Parser\PropertyParser
      */
     protected $columnParser;
     /**
@@ -27,13 +28,13 @@ class ClassInflector {
 
     /**
      * Create Entity Inflector
-     * @param TableParser $tableParser
-     * @param ColumnParser $columnParser
+     * @param Parser\EntityParser $entityParser
+     * @param PropertyParser $columnParser
      * @param MethodParser $methodParser
      */
-    public function __construct(TableParser $tableParser, ColumnParser $columnParser, MethodParser $methodParser)
+    public function __construct(EntityParser $entityParser, PropertyParser $columnParser, MethodParser $methodParser)
     {
-        $this->tableParser = $tableParser;
+        $this->entityParser = $entityParser;
         $this->columnParser = $columnParser;
         $this->methodParser = $methodParser;
     }
@@ -42,10 +43,10 @@ class ClassInflector {
     {
         $reflectClass = new ReflectionClass($entity);
 
-        $table = $this->tableParser->parse( $reflectClass );
-        $table->setColumns( $this->columnParser->parse( $reflectClass ) );
-        $table->setMethods( $this->methodParser->parse( $reflectClass ) );
+        $entity = $this->entityParser->parse( $reflectClass );
+        $entity->setColumns( $this->columnParser->parse( $reflectClass ) );
+        $entity->setMethods( $this->methodParser->parse( $reflectClass ) );
 
-        return $table;
+        return $entity;
     }
 } 

@@ -3,7 +3,7 @@
 abstract class BaseMethod {
 
     /**
-     * The method name used
+     * The method table used
      * @var string
      */
     protected $method;

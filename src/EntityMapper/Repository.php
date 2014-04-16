@@ -64,7 +64,7 @@ class Repository {
 
 
     /**
-     * Set Entity class/class name
+     * Set Entity class/class table
      * @param mixed $entityClassName
      */
     public function setEntity($entityClassName)
