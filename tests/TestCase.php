@@ -13,7 +13,7 @@ class TestCase extends PHPUnit_Framework_TestCase {
         $this->capsule->addConnection([
             'sqlite' => array(
                 'driver'   => 'sqlite',
-                'database' => __DIR__.'/testing.sqlite',
+                'database' => ':memory:',
                 'prefix'   => '',
             ),
         ]);
