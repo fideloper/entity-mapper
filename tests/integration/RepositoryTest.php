@@ -33,8 +33,8 @@ class RepositoryTest extends TestCase {
 
     public function testTesting()
     {
-        $repo = \EntityMapper\Repository::getRepository('\User');
-        var_dump($repo->find(1));
+//        $repo = \EntityMapper\Repository::getRepository('\User');
+//        var_dump($repo->find(1));
 
         $this->assertTrue(true);
     }
