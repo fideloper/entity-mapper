@@ -1,10 +1,9 @@
 <?php  namespace EntityMapper;
 
-use EntityMapper\Parser\EntityParser;
 use ReflectionClass;
 use EntityMapper\Parser\PropertyParser;
 use EntityMapper\Parser\MethodParser;
-use EntityMapper\Parser\TableParser;
+use EntityMapper\Parser\EntityParser;
 
 /**
  * Class ClassInflector
@@ -29,8 +28,8 @@ class ClassInflector {
     /**
      * Create Entity Inflector
      * @param Parser\EntityParser $entityParser
-     * @param PropertyParser $columnParser
-     * @param MethodParser $methodParser
+     * @param Parser\PropertyParser $columnParser
+     * @param Parser\MethodParser $methodParser
      */
     public function __construct(EntityParser $entityParser, PropertyParser $columnParser, MethodParser $methodParser)
     {
