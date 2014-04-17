@@ -145,7 +145,8 @@ trait CommentParser {
                         'Invalid tag_line detected: ' . $tag_line
                     );
                 }
-                $final[$matches[1]] = $matches[2];
+
+                $final[$matches[1]] = isset($matches[2]) ? $matches[2] : null;
             }
         }
 
