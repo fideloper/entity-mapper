@@ -1,4 +1,4 @@
-<?php  namespace EntityMapper\Parser; 
+<?php  namespace EntityMapper\Parser;
 
 use EntityMapper\Reflector\PropertyCollection;
 use ReflectionClass;
@@ -67,6 +67,18 @@ class PropertyParser implements ParserInterface {
         return new Property($columnName, $variableName, $type, $isId, $isValueObject);
     }
 
+    /**
+     * Get variable type, useful for using Value Objects.
+     *
+     * TODO: Work for classnames which aren't full qualified!
+     *       For example, if `@var Namespace\Class` is set in a
+     *       class with namespace \Some, the real classname
+     *       is actually \Some\Namespace\Class
+     *
+     * @param  [type]             $tags     [description]
+     * @param  ReflectionProperty $property [description]
+     * @return [type]                       [description]
+     */
     protected function getType($tags, ReflectionProperty $property)
     {
         if( isset($tags['var']) )
@@ -127,4 +139,4 @@ class PropertyParser implements ParserInterface {
     }
 
 
-} 
+}
