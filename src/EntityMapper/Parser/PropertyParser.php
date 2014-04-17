@@ -74,10 +74,9 @@ class PropertyParser implements ParserInterface {
      *       For example, if `@var Namespace\Class` is set in a
      *       class with namespace \Some, the real classname
      *       is actually \Some\Namespace\Class
-     *
-     * @param  [type]             $tags     [description]
-     * @param  ReflectionProperty $property [description]
-     * @return [type]                       [description]
+     * @param $tags
+     * @param ReflectionProperty $property
+     * @return string
      */
     protected function getType($tags, ReflectionProperty $property)
     {
