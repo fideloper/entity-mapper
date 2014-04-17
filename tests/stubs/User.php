@@ -40,6 +40,15 @@ class User {
     }
 
     /**
+     * Get Votes
+     * @return \Votes
+     */
+    public function getVotes()
+    {
+        return $this->votes;
+    }
+
+    /**
      * This is a setter with some logic
      * @setter votes
      * @param $votes
@@ -65,9 +74,29 @@ class User {
     {
         if( is_null($id) )
         {
-            return $id;
+            return $this->id;
         }
 
         $this->id = $id;
     }
+
+    /**
+     * Get Email
+     * @return \Email
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Get name
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+
 } 

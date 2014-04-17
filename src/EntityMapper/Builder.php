@@ -86,13 +86,19 @@ class Builder {
         return new Collection($entities);
     }
 
+    /**
+     * Hydrate entities with results
+     * @param $columns
+     * @return array|static[]
+     */
     public function getEntities($columns)
     {
         $results = $this->query->get($columns);
 
-        // FILL WITH ENTITIES HERE - array of stdClass
+        // Magic
+        $entities = $this->entityMapper->hydrate($this->entity, $results);
 
-        return $results;
+        return $entities;
     }
 
     /**

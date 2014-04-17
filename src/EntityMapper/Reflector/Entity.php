@@ -1,5 +1,7 @@
 <?php  namespace EntityMapper\Reflector;
 
+use ReflectionClass;
+
 class Entity {
 
     /**
@@ -22,10 +24,21 @@ class Entity {
      */
     protected $methods;
 
-    public function __construct($table, $repository)
+    /**
+     * @var \ReflectionClass
+     */
+    private $reflector;
+
+    public function __construct(ReflectionClass $reflector, $table, $repository)
     {
+        $this->reflector = $reflector;
         $this->table = $table;
         $this->repository = $repository;
+    }
+
+    public function reflector()
+    {
+        return $this->reflector;
     }
 
     public function table()

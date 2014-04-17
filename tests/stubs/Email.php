@@ -11,15 +11,17 @@ class Email {
 
     protected function setEmail($email)
     {
-        if( filter_var($email, FILTER_VALIDATE_EMAIL) )
+        if( ! filter_var($email, FILTER_VALIDATE_EMAIL) )
         {
             throw new \InvalidArgumentException('Valid email required');
         }
+
+        $this->email = $email;
     }
 
     public function getEmail()
     {
-        return $this->email();
+        return $this->email;
     }
 
     public function __toString()

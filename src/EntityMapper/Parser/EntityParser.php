@@ -17,7 +17,7 @@ class EntityParser implements ParserInterface {
         $tableName = $this->getTable($tags, $class);
         $repository = $this->getRepository($tags);
 
-        return new Entity($tableName, $repository);
+        return new Entity($class, $tableName, $repository);
     }
 
     protected function getTable($tags, $class)

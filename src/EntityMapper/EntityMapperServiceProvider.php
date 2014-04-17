@@ -14,6 +14,11 @@ class EntityMapperServiceProvider extends ServiceProvider {
             Repository::setConnectionResolver($this->app['db']);
         }
 
+        $this->app->bind('\EntityManager\EntityMapper', function($app)
+        {
+            return new EntityMapper($app);
+        });
+
         $this->app->bind('\EntityMapper\Cache\EntityCache', function($app)
         {
             return new EntityCache( $app->make('\EntityMapper\ClassInflector') );

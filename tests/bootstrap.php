@@ -27,25 +27,25 @@ $app['config']['database.fetch'] = PDO::FETCH_CLASS;
 $capsule->schema()->create('users', function($table)
 {
     $table->increments('id');
-    $table->string('name');
+    $table->string('username');
     $table->string('email');
     $table->integer('votes');
 });
 
 $capsule->table('users')->insert([
-    'name' => 'Chris',
+    'username' => 'Chris',
     'email' => 'chris@example.com',
     'votes' => 20,
 ]);
 
 $capsule->table('users')->insert([
-    'name' => 'Bob',
+    'username' => 'Bob',
     'email' => 'bob@example.com',
     'votes' => 10,
 ]);
 
 $capsule->table('users')->insert([
-    'name' => 'Dan',
+    'username' => 'Dan',
     'email' => 'dan@example.com',
     'votes' => 0,
 ]);
