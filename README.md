@@ -3,6 +3,10 @@ Entity Mapper
 
 [![Build Status](https://travis-ci.org/fideloper/entity-mapper.svg?branch=master)](https://travis-ci.org/fideloper/entity-mapper)
 
+<!--
+[![License](https://poser.pugx.org/fideloper/entity-manager/license.png)](https://packagist.org/packages/fideloper/entity-mapper)
+-->
+
 ---
 
 An Entity Mapping ORM, based on `Illuminate\Database`. This will hopefully become an easy to use (easier than Doctrine)
