@@ -31,7 +31,7 @@ class RepositoryTest extends TestCase {
         $this->assertInstanceof('\EntityMapper\Repository', $repo);
     }
 
-    public function testTesting()
+    public function testRepositoryFindsOne()
     {
         $repo = \EntityMapper\Repository::getRepository('\User');
         $user = $repo->find(1);
@@ -40,6 +40,26 @@ class RepositoryTest extends TestCase {
         $this->assertInstanceOf( '\Email', $user->getEmail() );
         $this->assertInstanceOf( '\Votes', $user->getVotes() );
         $this->assertTrue( is_string($user->getName()) );
+    }
+
+    /**
+     * @expectedException \EntityMapper\EntityNotFoundException
+     */
+    public function testRepositoryFailsIfNotFound()
+    {
+        $repo = \EntityMapper\Repository::getRepository('\User');
+        $repo->findOrFail(999);
+    }
+
+    public function testRepositoryGetsAll()
+    {
+        $repo = \EntityMapper\Repository::getRepository('\User');
+        $allUsers = $repo->all();
+
+        $this->assertTrue( count($allUsers) > 0 );
+        $this->assertInstanceof( '\Email', $allUsers->first()->getEmail() );
+        $this->assertInstanceOf( '\Votes', $allUsers->first()->getVotes() );
+        $this->assertTrue( is_string($allUsers->first()->getName()) );
     }
 }
 
