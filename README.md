@@ -16,3 +16,7 @@ It does a fair bit of Reflection-based parsing to map entities and map them to d
 used if `Illuminate\Cache` is available, or if someone wants to implement the CacheInterface with their own implementation.
 
 These are all just fancy plans for now.
+
+### License
+
+MIT. See the `LICENSE` file.
