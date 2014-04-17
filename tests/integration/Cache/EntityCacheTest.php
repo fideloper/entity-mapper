@@ -1,6 +1,6 @@
 <?php
 
-use EntityMapper\Cache\EntityCache;
+use EntityMapper\Cache\NullEntityCache;
 use EntityMapper\ClassInflector;
 use EntityMapper\Parser\PropertyParser;
 use EntityMapper\Parser\MethodParser;
@@ -8,7 +8,7 @@ use EntityMapper\Parser\EntityParser;
 
 class EntityCacheTest extends TestCase {
 
-    public function testCacheCaches()
+    public function testNullEntityCacheCaches()
     {
         $cache = $this->getCache();
 
@@ -21,11 +21,11 @@ class EntityCacheTest extends TestCase {
 
     protected function getCache()
     {
-        return new EntityCache(
+        return new NullEntityCache(
             new ClassInflector(
                 new EntityParser,
                 new PropertyParser,
                 new MethodParser)
         );
     }
-} 
+}

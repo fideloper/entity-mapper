@@ -182,7 +182,7 @@ class Repository {
     {
         $app = static::getApp();
 
-        $entity = $app->make('\EntityMapper\Cache\EntityCache')->get($entityClassName);
+        $entity = $app->make('\EntityMapper\Cache\EntityCacheInterface')->get($entityClassName);
         $entityMapper = $app->make('\EntityMapper\EntityMapper');
 
         // Set repository and its dependencies
@@ -206,4 +206,4 @@ class Repository {
 
         return call_user_func_array(array($query, $method), $parameters);
     }
-} 
+}

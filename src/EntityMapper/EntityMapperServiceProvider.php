@@ -1,6 +1,7 @@
-<?php  namespace EntityMapper; 
+<?php  namespace EntityMapper;
 
 use EntityMapper\Cache\EntityCache;
+use EntityMapper\Cache\NullEntityCache;
 use Illuminate\Support\ServiceProvider;
 
 class EntityMapperServiceProvider extends ServiceProvider {
@@ -14,14 +15,19 @@ class EntityMapperServiceProvider extends ServiceProvider {
             Repository::setConnectionResolver($this->app['db']);
         }
 
-        $this->app->bind('\EntityManager\EntityMapper', function($app)
+        $this->app->singleton('\EntityManager\EntityMapper', function($app)
         {
             return new EntityMapper($app);
         });
 
-        $this->app->bind('\EntityMapper\Cache\EntityCache', function($app)
+        $this->app->singleton('\EntityMapper\Cache\EntityCacheInterface', function($app)
         {
-            return new EntityCache( $app->make('\EntityMapper\ClassInflector') );
+            if( $this->app->bound('cache') )
+            {
+                return new EntityCache( $app['cache'], $app->make('\EntityMapper\ClassInflector') );
+            }
+
+            return new NullEntityCache( $app->make('\EntityMapper\ClassInflector') );
         });
     }
-} 
+}
