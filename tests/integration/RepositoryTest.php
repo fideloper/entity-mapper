@@ -37,6 +37,7 @@ class RepositoryTest extends TestCase {
         $user = $repo->find(1);
 
         $this->assertEquals( 1, $user->id() );
+        $this->assertInstanceOf( '\User', $user );
         $this->assertInstanceOf( '\Email', $user->getEmail() );
         $this->assertInstanceOf( '\Votes', $user->getVotes() );
         $this->assertTrue( is_string($user->getName()) );
@@ -57,9 +58,22 @@ class RepositoryTest extends TestCase {
         $allUsers = $repo->all();
 
         $this->assertTrue( count($allUsers) > 0 );
+        $this->assertInstanceOf( '\User', $allUsers->first() );
         $this->assertInstanceof( '\Email', $allUsers->first()->getEmail() );
         $this->assertInstanceOf( '\Votes', $allUsers->first()->getVotes() );
         $this->assertTrue( is_string($allUsers->first()->getName()) );
+    }
+
+    public function testRepostoryGetsEntityOnCustomSqlCall()
+    {
+        $repo = \EntityMapper\Repository::getRepository('\User');
+        $users = $repo->where('votes', '>', 0)->get();
+
+        $this->assertTrue( count($users) > 0 );
+        $this->assertInstanceOf( '\User', $users->first() );
+        $this->assertInstanceof( '\Email', $users->first()->getEmail() );
+        $this->assertInstanceOf( '\Votes', $users->first()->getVotes() );
+        $this->assertTrue( is_string($users->first()->getName()) );
     }
 }
 
