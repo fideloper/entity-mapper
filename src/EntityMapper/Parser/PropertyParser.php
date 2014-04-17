@@ -119,7 +119,7 @@ class PropertyParser implements ParserInterface {
 
     protected function getIsId($tags)
     {
-        return isset($tags['id']);
+        return array_key_exists('id', $tags);
     }
 
     protected function getIsValueObject($type)

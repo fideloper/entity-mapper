@@ -7,7 +7,7 @@
 class User {
 
     /**
-     * @id auto
+     * @id
      * @column id
      * @var integer
      */
