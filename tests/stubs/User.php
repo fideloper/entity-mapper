@@ -90,6 +90,15 @@ class User {
     }
 
     /**
+     * Set email
+     * @param Email $email
+     */
+    public function setEmail(Email $email)
+    {
+        $this->email = $email;
+    }
+
+    /**
      * Get name
      * @return string
      */

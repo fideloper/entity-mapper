@@ -96,9 +96,47 @@ class Builder {
         $results = $this->query->get($columns);
 
         // Magic
-        $entities = $this->entityMapper->hydrate($this->entity, $results);
+        $entities = $this->entityMapper->create($this->entity, $results);
 
         return $entities;
+    }
+
+    /**
+     * Insert or Update an Entity
+     * @param $entity
+     * @throws \DomainException
+     * @return mixed
+     */
+    public function save($entity)
+    {
+        // We need to know which property to use for the ID column
+        $idProperty = $this->entity->properties()->idProperty();
+
+        if( is_null($idProperty) )
+        {
+            throw new \DomainException('Entity must have an @id property assigned');
+        }
+
+        $idColumn = $idProperty->name();
+
+        $data = $this->entityMapper->dehydrate($this->entity, $entity);
+
+        // Can an $id be 0 ?
+        if( ! is_null($data[$idColumn]) )
+        {
+            // It has an id, let's update it
+            return $this->query->where($idColumn, $data[$idColumn])->update($data);
+        }
+
+        $insertId = $this->query->insertGetId($data);
+
+        if( $insertId )
+        {
+            // Hoping to pass reference
+            $this->entityMapper->hydrate($this->entity, [$idColumn => $insertId], $entity);
+        }
+
+        return $insertId;
     }
 
     /**

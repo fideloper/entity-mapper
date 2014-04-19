@@ -6,7 +6,7 @@ class PropertyCollection extends Collection {
 
     /**
      * Get the Primary ID column
-     * @return PropertyCollection
+     * @return Property
      */
     public function idProperty()
     {
@@ -43,11 +43,17 @@ class PropertyCollection extends Collection {
 
     public function property($key)
     {
-        return $this->get($key, null);
+        return $this->get('property.'.$key);
     }
 
-    public function addProperty($key, Property $property)
+    public function column($key)
     {
-        $this->put($key, $property);
+        return $this->get('column.'.$key);
+    }
+
+    public function addProperty(Property $property)
+    {
+        $this->put('property.'.$property->variable(), $property);
+        $this->put('column.'.$property->name(), $property);
     }
 }

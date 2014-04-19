@@ -1,6 +1,7 @@
 <?php  namespace EntityMapper;
 
 use EntityMapper\Reflector\Entity;
+use EntityMapper\ValueObjectInterface;
 use Illuminate\Container\Container;
 
 /**
@@ -29,13 +30,13 @@ class EntityMapper {
      * @param Array $results
      * @return array
      */
-    public function hydrate(Entity $entity, Array $results)
+    public function create(Entity $entity, Array $results)
     {
         $entities = [];
 
         foreach( $results as $result )
         {
-            $entities[] = $this->map($entity, $result);
+            $entities[] = $this->hydrate($entity, (array)$result, $entity->reflector()->newInstanceWithoutConstructor());
         }
 
         return $entities;
@@ -43,23 +44,21 @@ class EntityMapper {
 
     /**
      * @param Entity $entity
-     * @param \stdClass $result
+     * @param array $result
+     * @param mixed $concreteClass
      * @return object
      */
-    protected function map(Entity $entity, \stdClass $result)
+    public function hydrate(Entity $entity, Array $result, $concreteClass)
     {
         $properties = $entity->properties();
         $methods = $entity->methods();
         $reflector = $entity->reflector();
-        $concreteClass = $reflector->newInstanceWithoutConstructor();
 
-        foreach( $properties as $property )
+        foreach( $result as $column => $value )
         {
-            $reflectedProperty = $reflector->getProperty( $property->variable() );
+            $property = $properties->column($column);
 
-            // Get the database result for this property
-            $column = $property->name();
-            $value = $result->$column;
+            $reflectedProperty = $reflector->getProperty( $property->variable() );
 
             // If it's a Value Object, use the database
             // value to create the class
@@ -95,6 +94,73 @@ class EntityMapper {
         }
 
         return $concreteClass;
+    }
+
+    /**
+     * Get array of data from object
+     * @param Entity $entity
+     * @param $object
+     * @throws \DomainException
+     * @return array
+     */
+    public function dehydrate(Entity $entity, $object)
+    {
+        $properties = $entity->properties();
+        $reflector = $entity->reflector();
+        $methods = $entity->methods();
+
+        $data = [];
+        foreach( $properties as $property )
+        {
+            // Value starts at null
+            $value = null;
+
+            // If it has a public getter, use that
+            $getterUsed = false;
+            if( $getter = $methods->getter( $property->variable() ) )
+            {
+                $method = $reflector->getMethod( $getter->method() );
+
+                if( $method->isPublic() )
+                {
+                    $value = call_user_func(array($object, $method->getShortName()));
+                    $getterUsed = true;
+                }
+            }
+
+            // If value is still null because there's no setter, let's get it directly
+            // However, if a getter was used, skip this. The value can still be null
+            // as a result of a getter (i.e. in the case of an ID not yet set)
+            if( is_null($value) && ! $getterUsed )
+            {
+                $reflectedProperty = $reflector->getProperty( $property->variable() );
+                $reflectedProperty->setAccessible( true );
+                $value = $reflectedProperty->getValue( $object );
+            }
+
+            // If it's an object, there's some
+            // work to do to make it DB-friendly
+            if( is_object($value) )
+            {
+                // This is the easiest way out, use the __toDb()
+                // method. This could end up being THE way to persist
+                // Value Objects for now...
+                if( $value instanceof ValueObjectInterface )
+                {
+                    $value = $value->__toDb();
+                } else {
+                    // Users need to implement ValueObjectInterface on their value objects
+                    // This sucks for users who need value objects with multiple columns of data
+                    // like users with an address table. For now, they can use relationships.
+                    throw new \DomainException('Value objects must implement EntityMapper\ValueObjectInterface');
+                }
+            }
+            // TODO: Investigate where DateTimes are converted properly for database
+
+            $data[$property->name()] = $value;
+        }
+
+        return $data;
     }
 
 } 

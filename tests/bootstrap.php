@@ -7,6 +7,7 @@ require_once('stubs/Votes.php');
 require_once('stubs/User.php');
 require_once('stubs/UserRepository.php');
 
+use EntityMapper\Repository;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;
@@ -49,3 +50,9 @@ $capsule->table('users')->insert([
     'email' => 'dan@example.com',
     'votes' => 0,
 ]);
+
+$app = $capsule->getContainer();
+$sp = new \EntityMapper\EntityMapperServiceProvider($app);
+$sp->register();
+
+Repository::setConnectionResolver( $capsule->getDatabaseManager() );

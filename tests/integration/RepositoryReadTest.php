@@ -2,38 +2,25 @@
 
 use EntityMapper\Repository;
 
-class RepositoryTest extends TestCase {
-
-    protected $app;
-
-    public function setUp()
-    {
-        global $capsule;
-
-        $this->app = $capsule->getContainer();
-        $sp = new \EntityMapper\EntityMapperServiceProvider($this->app);
-        $sp->register();
-
-        Repository::setConnectionResolver( $capsule->getDatabaseManager() );
-    }
+class RepositoryReadTest extends TestCase {
 
     public function testCanLoadCustomRepository()
     {
-        $repo = \EntityMapper\Repository::getRepository('\User');
+        $repo = Repository::getRepository('\User');
 
         $this->assertInstanceof('\UserRepository', $repo);
     }
 
     public function testCanLoadDefaultRepository()
     {
-        $repo = \EntityMapper\Repository::getRepository( new noRepositoryDefinedStub );
+        $repo = Repository::getRepository( new noRepositoryDefinedStub );
 
         $this->assertInstanceof('\EntityMapper\Repository', $repo);
     }
 
     public function testRepositoryFindsOne()
     {
-        $repo = \EntityMapper\Repository::getRepository('\User');
+        $repo = Repository::getRepository('\User');
         $user = $repo->find(1);
 
         $this->assertEquals( 1, $user->id() );
@@ -48,13 +35,13 @@ class RepositoryTest extends TestCase {
      */
     public function testRepositoryFailsIfNotFound()
     {
-        $repo = \EntityMapper\Repository::getRepository('\User');
+        $repo = Repository::getRepository('\User');
         $repo->findOrFail(999);
     }
 
     public function testRepositoryGetsAll()
     {
-        $repo = \EntityMapper\Repository::getRepository('\User');
+        $repo = Repository::getRepository('\User');
         $allUsers = $repo->all();
 
         $this->assertTrue( count($allUsers) > 0 );
@@ -66,7 +53,7 @@ class RepositoryTest extends TestCase {
 
     public function testRepostoryGetsEntityOnCustomSqlCall()
     {
-        $repo = \EntityMapper\Repository::getRepository('\User');
+        $repo = Repository::getRepository('\User');
         $users = $repo->where('votes', '>', 0)->get();
 
         $this->assertTrue( count($users) > 0 );

@@ -38,7 +38,7 @@ class PropertyParser implements ParserInterface {
             // properly defined and with a column table
             if( ! is_null($column) )
             {
-                $propertyCollection->addProperty($column->variable(), $column);
+                $propertyCollection->addProperty($column);
             }
         }
 

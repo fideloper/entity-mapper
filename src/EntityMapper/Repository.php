@@ -58,7 +58,11 @@ class Repository {
      * public function firstByAttributess($attributes) {}
      * */
 
-    public function save($entity) {}
+    public function save($entity)
+    {
+        return $this->query()->save($entity);
+    }
+
     public function delete($entity) {}
     public function touch($entity) {}
 
@@ -91,16 +95,6 @@ class Repository {
         $builder = new Builder( $this->newBaseQueryBuilder(), $this->entity, $this->mapper );
         $builder->setTable( $this->entity->table() );
         return $builder;
-    }
-
-    /**
-     * Get new Query Builder prepared
-     * for insert, update and deletions
-     * @return Builder
-     */
-    public function writeQuery()
-    {
-        return new Builder( $this->newBaseQueryBuilder(), $this->entity, $this->mapper );
     }
 
     /**

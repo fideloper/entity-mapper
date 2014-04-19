@@ -1,6 +1,6 @@
 <?php
 
-class Votes {
+class Votes implements EntityMapper\ValueObjectInterface {
 
     private $votes;
 
@@ -28,4 +28,9 @@ class Votes {
     {
         return $this->getVotes();
     }
-} 
+
+    public function __toDb()
+    {
+        return $this->__toString();
+    }
+}

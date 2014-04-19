@@ -1,6 +1,6 @@
 <?php
 
-class Email {
+class Email implements EntityMapper\ValueObjectInterface {
 
     protected $email;
 
@@ -27,6 +27,11 @@ class Email {
     public function __toString()
     {
         return $this->getEmail();
+    }
+
+    public function __toDb()
+    {
+        return $this->__toString();
     }
 
 } 
