@@ -1,6 +1,7 @@
 <?php  namespace EntityMapper;
 
 use EntityMapper\Reflector\Entity;
+use EntityMapper\Reflector\Relation;
 use EntityMapper\ValueObjectInterface;
 use Illuminate\Container\Container;
 
@@ -112,6 +113,10 @@ class EntityMapper {
         $data = [];
         foreach( $properties as $property )
         {
+            if( $property instanceof Relation && ! $property->isColumn() )
+            {
+                continue;
+            }
             // Value starts at null
             $value = null;
 

@@ -53,7 +53,20 @@ class PropertyCollection extends Collection {
 
     public function addProperty(PropertyInterface $property)
     {
-        $this->put('property.'.$property->property(), $property);
-        $this->put('column.'.$property->column(), $property);
+        if( $property instanceof Relation )
+        {
+            $this->put('relation.'.$property->relation(), $property);
+
+            if( $property->isColumn() )
+            {
+                $this->put('column.'.$property->column(), $property);
+            }
+        }
+
+        if( $property instanceof Property )
+        {
+            $this->put('property.'.$property->property(), $property);
+            $this->put('column.'.$property->column(), $property);
+        }
     }
 }
