@@ -51,9 +51,9 @@ class PropertyCollection extends Collection {
         return $this->get('column.'.$key);
     }
 
-    public function addProperty(Property $property)
+    public function addProperty(PropertyInterface $property)
     {
         $this->put('property.'.$property->variable(), $property);
-        $this->put('column.'.$property->name(), $property);
+        $this->put('column.'.$property->column(), $property);
     }
 }

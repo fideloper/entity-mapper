@@ -1,9 +1,11 @@
 <?php  namespace EntityMapper\Parser;
 
-use EntityMapper\Reflector\PropertyCollection;
+
 use ReflectionClass;
 use ReflectionProperty;
+use EntityMapper\Reflector\Relation;
 use EntityMapper\Reflector\Property;
+use EntityMapper\Reflector\PropertyCollection;
 
 class PropertyParser implements ParserInterface {
 
@@ -32,7 +34,7 @@ class PropertyParser implements ParserInterface {
         $propertyCollection = new PropertyCollection;
         foreach( $properties as $property )
         {
-            $column = $this->parseAttribute( $property );
+            $column = $this->parseProperty( $property );
 
             // Only of Property has the @column definition
             // properly defined and with a column table
@@ -45,20 +47,45 @@ class PropertyParser implements ParserInterface {
         return $propertyCollection;
     }
 
-    protected function parseAttribute( ReflectionProperty $property )
+    protected function parseProperty( ReflectionProperty $property )
     {
         $comment = $property->getDocComment();
         $comment = $this->cleanInput($comment);
         $tags = $this->splitComment($comment);
         $tags = $this->parseTags($tags);
 
-        // Bail out if there's no column table defined
-        if( ! array_key_exists('column', $tags) )
+        // Bail out if there's no column or relation defined
+        $isColumn = array_key_exists('column', $tags);
+        $isRelation = array_key_exists('relation', $tags);
+
+        if( ! $isColumn && ! $isRelation )
         {
             return null;
         }
 
-        $columnName = $this->getName($tags);
+        if( $isRelation )
+        {
+            return $this->parseRelation($property, $tags);
+        }
+
+        if( $isColumn )
+        {
+            return $this->parseColumn($property, $tags);
+        }
+    }
+
+    protected function parseRelation($property, $tags)
+    {
+        extract( $this->getRelation($tags) );
+        $columnName = $this->getColumn($tags, false);
+        $property = $property->getName();
+
+        return new Relation($classname, $property, $relationship, $columnName);
+    }
+
+    protected function parseColumn($property, $tags)
+    {
+        $columnName = $this->getColumn($tags);
         $variableName = $property->getName();
         $type = $this->getType( $tags, $property );
         $isId = $this->getIsId( $tags );
@@ -127,14 +154,31 @@ class PropertyParser implements ParserInterface {
         return class_exists($type);
     }
 
-    protected function getName($tags)
+    protected function getColumn($tags, $required=true)
     {
-        if( is_null($tags['column']) || empty($tags['column']) )
+        if( $required && ( is_null($tags['column']) || empty($tags['column']) ) )
         {
-            throw new \DomainException('Property table must be defined');
+            throw new \DomainException('Property column must be defined');
         }
 
-        return $tags['column'];
+        return isset($tags['column']) ? $tags['column'] : null;
+    }
+
+    private function getRelation($tags)
+    {
+        // Remove extra spaces between bits
+        $raw = preg_replace('!\s+!', ' ', trim($tags['relation']));
+        $bits = explode(' ', $raw);
+
+        if( ! array_key_exists(1, $bits) )
+        {
+            throw new \DomainException('Relationship column requires relationship type and related classname');
+        }
+
+        return [
+            'relationship' => $bits[0],
+            'classname' => $bits[1],
+        ];
     }
 
 

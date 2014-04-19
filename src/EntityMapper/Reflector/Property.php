@@ -1,11 +1,11 @@
 <?php  namespace EntityMapper\Reflector;
 
-class Property {
+class Property implements PropertyInterface {
 
     /**
      * @var string
      */
-    protected $name;
+    protected $column;
 
     /**
      * @var string
@@ -27,18 +27,18 @@ class Property {
      */
     protected $isValueObject;
 
-    public function __construct($name, $variableName, $type, $isId, $isValueObject)
+    public function __construct($column, $variableName, $type, $isId, $isValueObject)
     {
-        $this->name = $name;
+        $this->column = $column;
         $this->variableName = $variableName;
         $this->type = $type;
         $this->isId = $isId;
         $this->isValueObject = $isValueObject;
     }
 
-    public function name()
+    public function column()
     {
-        return $this->name;
+        return $this->column;
     }
 
     public function variable()

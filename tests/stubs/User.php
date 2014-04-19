@@ -31,6 +31,12 @@ class User {
      */
     protected $votes;
 
+    /**
+     * @relation hasOne \Post
+     * @var \EntityMapper\Collection
+     */
+    protected $posts;
+
     public function __construct($name, Email $email, $votes=null, $id=null)
     {
         $this->name = $name;

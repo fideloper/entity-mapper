@@ -12,7 +12,7 @@ class PropertyParserTest extends TestCase {
         $properties = $parser->parse($reflectionClass);
 
         $this->assertInstanceof( '\EntityMapper\Reflector\PropertyCollection', $properties );
-        $this->assertEquals( 'id', $properties->property('id')->name() );
+        $this->assertEquals( 'id', $properties->property('id')->column() );
         $this->assertEquals( 'id', $properties->property('id')->variable() );
         $this->assertEquals( 'integer', $properties->property('id')->type() );
         $this->assertTrue( $properties->property('id')->isId() );
@@ -27,7 +27,7 @@ class PropertyParserTest extends TestCase {
         $properties = $parser->parse($reflectionClass);
 
         $this->assertInstanceof( '\EntityMapper\Reflector\PropertyCollection', $properties );
-        $this->assertEquals( 'username', $properties->property('name')->name() , 'Test property name can be different from variable name');
+        $this->assertEquals( 'username', $properties->property('name')->column() , 'Test property name can be different from variable name');
         $this->assertEquals( 'name', $properties->property('name')->variable() );
         $this->assertEquals( 'string', $properties->property('name')->type() );
         $this->assertFalse( $properties->property('name')->isId() );
@@ -42,7 +42,7 @@ class PropertyParserTest extends TestCase {
         $properties = $parser->parse($reflectionClass);
 
         $this->assertInstanceof( '\EntityMapper\Reflector\PropertyCollection', $properties );
-        $this->assertEquals( 'email', $properties->property('email')->name() , 'Test column table can be different from property table');
+        $this->assertEquals( 'email', $properties->property('email')->column() , 'Test column table can be different from property table');
     }
 
     public function testHydratedObjectGuessesType()

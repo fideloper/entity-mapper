@@ -157,7 +157,7 @@ class EntityMapper {
             }
             // TODO: Investigate where DateTimes are converted properly for database
 
-            $data[$property->name()] = $value;
+            $data[$property->column()] = $value;
         }
 
         return $data;

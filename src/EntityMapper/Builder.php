@@ -45,7 +45,7 @@ class Builder {
         }
 
         // Need to get ID column
-        $this->query->where($this->entity->properties()->idProperty()->name(), '=', $id);
+        $this->query->where($this->entity->properties()->idProperty()->column(), '=', $id);
 
         return $this->first($columns);
     }
@@ -55,7 +55,7 @@ class Builder {
         if (empty($id)) return new Collection;
 
         // Need to get ID column
-        $this->query->whereIn($this->entity->properties()->idProperty()->name(), $id);
+        $this->query->whereIn($this->entity->properties()->idProperty()->column(), $id);
 
         return $this->get($columns);
     }
@@ -117,7 +117,7 @@ class Builder {
             throw new \DomainException('Entity must have an @id property assigned');
         }
 
-        $idColumn = $idProperty->name();
+        $idColumn = $idProperty->column();
 
         $data = $this->entityMapper->dehydrate($this->entity, $entity);
 
