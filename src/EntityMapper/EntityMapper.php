@@ -58,7 +58,7 @@ class EntityMapper {
         {
             $property = $properties->column($column);
 
-            $reflectedProperty = $reflector->getProperty( $property->variable() );
+            $reflectedProperty = $reflector->getProperty( $property->property() );
 
             // If it's a Value Object, use the database
             // value to create the class
@@ -70,7 +70,7 @@ class EntityMapper {
             // Check if there's a method assigned
             // as a setter for this property
             $usedSetter = false;
-            if( $setter = $methods->setter( $property->variable() ) )
+            if( $setter = $methods->setter( $property->property() ) )
             {
                 $method = $reflector->getMethod( $setter->method() );
 
@@ -117,7 +117,7 @@ class EntityMapper {
 
             // If it has a public getter, use that
             $getterUsed = false;
-            if( $getter = $methods->getter( $property->variable() ) )
+            if( $getter = $methods->getter( $property->property() ) )
             {
                 $method = $reflector->getMethod( $getter->method() );
 
@@ -133,7 +133,7 @@ class EntityMapper {
             // as a result of a getter (i.e. in the case of an ID not yet set)
             if( is_null($value) && ! $getterUsed )
             {
-                $reflectedProperty = $reflector->getProperty( $property->variable() );
+                $reflectedProperty = $reflector->getProperty( $property->property() );
                 $reflectedProperty->setAccessible( true );
                 $value = $reflectedProperty->getValue( $object );
             }

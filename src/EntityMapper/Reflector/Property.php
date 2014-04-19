@@ -10,7 +10,7 @@ class Property implements PropertyInterface {
     /**
      * @var string
      */
-    protected $variableName;
+    protected $property;
 
     /**
      * @var string
@@ -27,10 +27,10 @@ class Property implements PropertyInterface {
      */
     protected $isValueObject;
 
-    public function __construct($column, $variableName, $type, $isId, $isValueObject)
+    public function __construct($column, $property, $type, $isId, $isValueObject)
     {
         $this->column = $column;
-        $this->variableName = $variableName;
+        $this->property = $property;
         $this->type = $type;
         $this->isId = $isId;
         $this->isValueObject = $isValueObject;
@@ -41,9 +41,9 @@ class Property implements PropertyInterface {
         return $this->column;
     }
 
-    public function variable()
+    public function property()
     {
-        return $this->variableName;
+        return $this->property;
     }
 
     public function type()

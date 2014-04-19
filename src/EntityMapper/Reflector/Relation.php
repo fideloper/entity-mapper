@@ -37,7 +37,7 @@ class Relation implements PropertyInterface {
 
     public function property()
     {
-        return $this->variableName;
+        return $this->property;
     }
 
     public function relation()

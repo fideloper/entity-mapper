@@ -13,7 +13,7 @@ class PropertyParserTest extends TestCase {
 
         $this->assertInstanceof( '\EntityMapper\Reflector\PropertyCollection', $properties );
         $this->assertEquals( 'id', $properties->property('id')->column() );
-        $this->assertEquals( 'id', $properties->property('id')->variable() );
+        $this->assertEquals( 'id', $properties->property('id')->property() );
         $this->assertEquals( 'integer', $properties->property('id')->type() );
         $this->assertTrue( $properties->property('id')->isId() );
         $this->assertFalse( $properties->property('id')->isValueObject() );
@@ -28,7 +28,7 @@ class PropertyParserTest extends TestCase {
 
         $this->assertInstanceof( '\EntityMapper\Reflector\PropertyCollection', $properties );
         $this->assertEquals( 'username', $properties->property('name')->column() , 'Test property name can be different from variable name');
-        $this->assertEquals( 'name', $properties->property('name')->variable() );
+        $this->assertEquals( 'name', $properties->property('name')->property() );
         $this->assertEquals( 'string', $properties->property('name')->type() );
         $this->assertFalse( $properties->property('name')->isId() );
         $this->assertFalse( $properties->property('name')->isValueObject() );

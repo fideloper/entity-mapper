@@ -53,7 +53,7 @@ class PropertyCollection extends Collection {
 
     public function addProperty(PropertyInterface $property)
     {
-        $this->put('property.'.$property->variable(), $property);
+        $this->put('property.'.$property->property(), $property);
         $this->put('column.'.$property->column(), $property);
     }
 }
