@@ -82,5 +82,6 @@ $capsule->table('posts')->insert([
 $app = $capsule->getContainer();
 $sp = new \EntityMapper\EntityMapperServiceProvider($app);
 $sp->register();
+$sp->boot();
 
 Repository::setConnectionResolver( $capsule->getDatabaseManager() );

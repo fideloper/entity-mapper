@@ -30,9 +30,9 @@ class Relation implements PropertyInterface {
         $this->column = $column;
     }
 
-    public function classname()
+    public function column()
     {
-        return $this->name;
+        return $this->column;
     }
 
     public function property()
@@ -45,13 +45,13 @@ class Relation implements PropertyInterface {
         return $this->relation;
     }
 
-    public function column()
-    {
-        return $this->column;
-    }
-
     public function isColumn()
     {
         return ! is_null($this->column);
+    }
+
+    public function classname()
+    {
+        return $this->name;
     }
 } 

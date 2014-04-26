@@ -3,6 +3,7 @@
 use EntityMapper\Reflector\Entity;
 use EntityMapper\Reflector\Relation;
 use EntityMapper\ValueObjectInterface;
+use EntityMapper\Cache\EntityCacheInterface;
 use Illuminate\Container\Container;
 
 /**
@@ -18,39 +19,52 @@ class EntityMapper {
     protected $app;
 
     /**
+     * @var \EntityMapper\Cache\EntityCacheInterface;
+     */
+    private $entityCache;
+
+    /**
      * Create a new EntityMapper
      * @param Container $container
+     * @param \EntityMapper\Cache\EntityCacheInterface $entityCache
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, EntityCacheInterface $entityCache)
     {
         $this->app = $container;
+        $this->entityCache = $entityCache;
     }
 
     /**
-     * @param Entity $entity
+     * @param mixed $class
      * @param Array $results
      * @return array
      */
-    public function create(Entity $entity, Array $results)
+    public function create($class, Array $results)
     {
         $entities = [];
 
         foreach( $results as $result )
         {
-            $entities[] = $this->hydrate($entity, (array)$result, $entity->reflector()->newInstanceWithoutConstructor());
+            $entities[] = $this->hydrate($class, (array)$result);
         }
 
         return $entities;
     }
 
     /**
-     * @param Entity $entity
+     * @param mixed $class
      * @param array $result
-     * @param mixed $concreteClass
      * @return object
      */
-    public function hydrate(Entity $entity, Array $result, $concreteClass)
+    public function hydrate($class, Array $result)
     {
+        $entity = $this->entityCache->get($class);
+
+        if( ! is_object($class) )
+        {
+            $class = $entity->reflector()->newInstanceWithoutConstructor();
+        }
+
         $properties = $entity->properties();
         $methods = $entity->methods();
         $reflector = $entity->reflector();
@@ -77,7 +91,7 @@ class EntityMapper {
 
                 if( $method->isPublic() )
                 {
-                    call_user_func(array($concreteClass, $method->getShortName()), $value);
+                    call_user_func(array($class, $method->getShortName()), $value);
                     $usedSetter = true;
                 }
             }
@@ -88,13 +102,13 @@ class EntityMapper {
             {
                 $reflectedProperty->setAccessible(true);
                 $reflectedProperty->setValue(
-                    $concreteClass,
+                    $class,
                     $value
                 );
             }
         }
 
-        return $concreteClass;
+        return $class;
     }
 
     /**

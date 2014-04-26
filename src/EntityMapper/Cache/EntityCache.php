@@ -3,7 +3,7 @@
 use Illuminate\Cache\CacheManager;
 use EntityMapper\ClassInflector;
 
-class EntityCache {
+class EntityCache implements EntityCacheInterface {
 
     /**
      * @var \Illuminate\Cache\CacheManager

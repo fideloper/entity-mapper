@@ -96,7 +96,7 @@ class Builder {
         $results = $this->query->get($columns);
 
         // Magic
-        $entities = $this->entityMapper->create($this->entity, $results);
+        $entities = $this->entityMapper->create($this->entity->reflector()->getName(), $results);
 
         return $entities;
     }
@@ -132,8 +132,7 @@ class Builder {
 
         if( $insertId )
         {
-            // Hoping to pass reference
-            $this->entityMapper->hydrate($this->entity, [$idColumn => $insertId], $entity);
+            $this->entityMapper->hydrate($entity, [$idColumn => $insertId]);
         }
 
         return $insertId;

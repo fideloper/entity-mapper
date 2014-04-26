@@ -1,4 +1,4 @@
-<?php namespace EntityMapper;
+<?php namespace EntityMapper\Cache;
 
 interface EntityCacheInterface {
 

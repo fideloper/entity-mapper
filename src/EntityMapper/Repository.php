@@ -176,8 +176,9 @@ class Repository {
     {
         $app = static::getApp();
 
-        $entity = $app->make('\EntityMapper\Cache\EntityCacheInterface')->get($entityClassName);
-        $entityMapper = $app->make('\EntityMapper\EntityMapper');
+        $entity = $app->make('EntityMapper\Cache\EntityCacheInterface')->get($entityClassName);
+
+        $entityMapper = $app->make('EntityMapper\EntityMapper');
 
         // Set repository and its dependencies
         $repository = ($entity->repository() === 'base') ? new static : $app->make($entity->repository());

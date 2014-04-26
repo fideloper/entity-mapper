@@ -2,7 +2,7 @@
 
 use EntityMapper\ClassInflector;
 
-class NullEntityCache {
+class NullEntityCache implements EntityCacheInterface {
 
     /**
      * @var \EntityMapper\ClassInflector
