@@ -14,6 +14,14 @@ use Illuminate\Container\Container;
 class EntityMapper {
 
     /**
+     * Cached entities so they don't need re-retrieval
+     * from cache within a request if this same entity
+     * mapper class is used
+     * @var array
+     */
+    protected $cachedEntities = [];
+
+    /**
      * @var \Illuminate\Container\Container
      */
     protected $app;
@@ -58,7 +66,7 @@ class EntityMapper {
      */
     public function hydrate($class, Array $result)
     {
-        $entity = $this->entityCache->get($class);
+        $entity = $this->entity($class);
 
         if( ! is_object($class) )
         {
@@ -113,13 +121,14 @@ class EntityMapper {
 
     /**
      * Get array of data from object
-     * @param Entity $entity
      * @param $object
      * @throws \DomainException
      * @return array
      */
-    public function dehydrate(Entity $entity, $object)
+    public function dehydrate($object)
     {
+        $entity = $this->entity($object);
+
         $properties = $entity->properties();
         $reflector = $entity->reflector();
         $methods = $entity->methods();
@@ -131,6 +140,7 @@ class EntityMapper {
             {
                 continue;
             }
+
             // Value starts at null
             $value = null;
 
@@ -180,6 +190,59 @@ class EntityMapper {
         }
 
         return $data;
+    }
+
+    /**
+     * Retrieve entity from class or class name
+     * @param $class
+     * @return \EntityMapper\Reflector\Entity
+     */
+    public function entity($class)
+    {
+        if( ! is_string($class) )
+        {
+            $class = get_class($class);
+        }
+
+        if( ! isset($this->cachedEntities[$class]) )
+        {
+            $this->cachedEntities[$class] = $this->entityCache->get($class);
+        }
+
+        return $this->cachedEntities[$class];
+    }
+
+    /**
+     * Get the repository class mapped
+     * to an entity
+     * @param $class
+     * @return string
+     */
+    public function repository($class)
+    {
+        return $this->entity($class)->repository();
+    }
+
+    /**
+     * Return the table name mapped
+     * to an entity
+     * @param $class
+     * @return string
+     */
+    public function table($class)
+    {
+        return $this->entity($class)->table();
+    }
+
+    /**
+     * Get ID column name mapped
+     * to an entity
+     * @param $class
+     * @return string
+     */
+    public function idColumn($class)
+    {
+        return $this->entity($class)->properties()->idProperty()->column();
     }
 
 } 

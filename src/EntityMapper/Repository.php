@@ -92,9 +92,7 @@ class Repository {
      */
     public function query()
     {
-        $builder = new Builder( $this->newBaseQueryBuilder(), $this->entity, $this->mapper );
-        $builder->setTable( $this->entity->table() );
-        return $builder;
+        return new Builder( $this->newBaseQueryBuilder(), $this->entity, $this->mapper );
     }
 
     /**
@@ -176,13 +174,12 @@ class Repository {
     {
         $app = static::getApp();
 
-        $entity = $app->make('EntityMapper\Cache\EntityCacheInterface')->get($entityClassName);
-
         $entityMapper = $app->make('EntityMapper\EntityMapper');
 
         // Set repository and its dependencies
-        $repository = ($entity->repository() === 'base') ? new static : $app->make($entity->repository());
-        $repository->setEntity($entity);
+        $repositoryClassName = $entityMapper->repository($entityClassName);
+        $repository = ($repositoryClassName === 'base') ? new static : $app->make($repositoryClassName);
+        $repository->setEntity($entityClassName);
         $repository->setMapper($entityMapper);
 
         return $repository;

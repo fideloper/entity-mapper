@@ -1,6 +1,5 @@
 <?php  namespace EntityMapper;
 
-use EntityMapper\Reflector\Entity;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Builder {
@@ -11,7 +10,8 @@ class Builder {
     protected $query;
 
     /**
-     * @var Reflector\Entity
+     * Classname or a concrete entity class
+     * @var mixed
      */
     private $entity;
 
@@ -30,11 +30,13 @@ class Builder {
         'min', 'max', 'avg', 'sum', 'exists', 'getBindings',
     );
 
-    public function __construct(QueryBuilder $query, Entity $entity, EntityMapper $entityMapper)
+    public function __construct(QueryBuilder $query, $entity, EntityMapper $entityMapper)
     {
         $this->query = $query;
         $this->entity = $entity;
         $this->entityMapper = $entityMapper;
+
+        $this->setTable( $this->entityMapper->table($this->entity) );
     }
 
     public function find($id, $columns = ['*'])
@@ -45,7 +47,7 @@ class Builder {
         }
 
         // Need to get ID column
-        $this->query->where($this->entity->properties()->idProperty()->column(), '=', $id);
+        $this->query->where($this->entityMapper->idColumn($this->entity), '=', $id);
 
         return $this->first($columns);
     }
@@ -55,7 +57,7 @@ class Builder {
         if (empty($id)) return new Collection;
 
         // Need to get ID column
-        $this->query->whereIn($this->entity->properties()->idProperty()->column(), $id);
+        $this->query->whereIn($this->entityMapper->idColumn($this->entity), $id);
 
         return $this->get($columns);
     }
@@ -96,7 +98,7 @@ class Builder {
         $results = $this->query->get($columns);
 
         // Magic
-        $entities = $this->entityMapper->create($this->entity->reflector()->getName(), $results);
+        $entities = $this->entityMapper->create($this->entity, $results);
 
         return $entities;
     }
@@ -109,17 +111,9 @@ class Builder {
      */
     public function save($entity)
     {
-        // We need to know which property to use for the ID column
-        $idProperty = $this->entity->properties()->idProperty();
+        $idColumn = $this->entityMapper->idColumn($this->entity);
 
-        if( is_null($idProperty) )
-        {
-            throw new \DomainException('Entity must have an @id property assigned');
-        }
-
-        $idColumn = $idProperty->column();
-
-        $data = $this->entityMapper->dehydrate($this->entity, $entity);
+        $data = $this->entityMapper->dehydrate($entity);
 
         // Can an $id be 0 ?
         if( ! is_null($data[$idColumn]) )
