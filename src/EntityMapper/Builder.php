@@ -105,6 +105,24 @@ class Builder {
     public function save($entity)
     {
         // Gather Relations (via EntityMapper)
+        $relations = $this->entityMapper->relations($entity);
+
+        /* TODO: Finish attempting to save relationships...and oh yeah, build relationship classes...
+                 1:m/m:1 and m:m will need collection-type treatment
+        // Map relationships to relationship objects, each with own query builder
+        // which will save the relationship properties (entites) separately
+        foreach( $relations as $relationship )
+        {
+            // Does this belong inside of EntityMapper?
+            $property = $relationship->property();
+            $relatedEntity = $entity->$property;
+            //  Via repository? Via EntityMapper\Builder?
+            // Yes, this is a protected property!
+            $builder = new static($this->query, $relatedEntity, $this->entityMapper);
+            $builder->save($relatedEntity);
+        }
+        */
+
         // Save those Relations separately via their Repositories
         return $this->saveEntity($entity);
     }

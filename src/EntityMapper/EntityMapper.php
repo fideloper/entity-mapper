@@ -234,6 +234,11 @@ class EntityMapper {
         return $this->entity($class)->table();
     }
 
+    public function relations($class)
+    {
+        return $this->entity($class)->properties()->relations();
+    }
+
     /**
      * Get ID column name mapped
      * to an entity
