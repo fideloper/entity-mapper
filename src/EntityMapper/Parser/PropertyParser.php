@@ -76,7 +76,7 @@ class PropertyParser implements ParserInterface {
 
     protected function parseRelation($property, $tags)
     {
-        extract( $this->getRelation($tags) );
+        extract( $this->getRelation($tags) ); // Provides $classname, $relationship
         $columnName = $this->getColumn($tags, false);
         $property = $property->getName();
 

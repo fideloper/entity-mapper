@@ -41,8 +41,36 @@ class PropertyParserTest extends TestCase {
 
         $properties = $parser->parse($reflectionClass);
 
-        $this->assertInstanceof( '\EntityMapper\Reflector\PropertyCollection', $properties );
-        $this->assertEquals( 'email', $properties->property('email')->column() , 'Test column table can be different from property table');
+        $this->assertEquals( 'email', $properties->property('email')->column() );
+        $this->assertTrue( $properties->property('email')->isValueObject() );
+        $this->assertEquals( '\Email', $properties->property('email')->type() );
+    }
+
+    public function testRelationPropertiesParsed()
+    {
+        $parser = new PropertyParser;
+        $reflectionClass = new ReflectionClass('\User');
+
+        $properties = $parser->parse($reflectionClass);
+
+        $this->assertInstanceof( '\EntityMapper\Reflector\Relation', $properties->relation('posts') );
+        $this->assertEquals( null, $properties->relation('posts')->column() );
+        $this->assertEquals( 'posts', $properties->relation('posts')->property() );
+        $this->assertEquals( 'hasOne', $properties->relation('posts')->relation() );
+        $this->assertEquals( '\Post', $properties->relation('posts')->classname() );
+        $this->assertEquals( '\Post', $properties->relation('posts')->type(), 'Test type() is alias for classname()' );
+    }
+
+    public function testRelationsCanAllBeRetrieved()
+    {
+        $parser = new PropertyParser;
+        $reflectionClass = new ReflectionClass('\User');
+
+        $properties = $parser->parse($reflectionClass);
+
+        $this->assertInstanceof( 'Illuminate\Support\Collection', $properties->relations() );
+        $this->assertTrue( count($properties->relations()) > 0 );
+        $this->assertInstanceof( '\EntityMapper\Reflector\Relation', $properties->relations()->first() );
     }
 
     public function testHydratedObjectGuessesType()

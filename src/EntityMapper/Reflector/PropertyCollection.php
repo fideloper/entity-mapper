@@ -51,12 +51,36 @@ class PropertyCollection extends Collection {
         return $this->get('column.'.$key);
     }
 
+    public function relation($key)
+    {
+        return $this->get('relation.'.$key);
+    }
+
+    public function relations()
+    {
+        $relations = [];
+
+        foreach( $this->items as $key => $item )
+        {
+            if( strpos($key, 'relation') === 0 )
+            {
+                $relations[] = $item;
+            }
+        }
+
+        return new static($relations);
+    }
+
     public function addProperty(PropertyInterface $property)
     {
         if( $property instanceof Relation )
         {
-            $this->put('relation.'.$property->relation(), $property);
+            $this->put('relation.'.$property->property(), $property);
 
+            // TODO: Don't allow relations to be columns as well.
+            // For example, have user define "user_id" and "user"
+            // as separate properties on an object (??) if they want
+            // the ID [good DDD to have ID and object? Not really...)
             if( $property->isColumn() )
             {
                 $this->put('column.'.$property->column(), $property);

@@ -24,7 +24,7 @@ class Relation implements PropertyInterface {
 
     public function __construct($classname, $property, $relation, $column=null)
     {
-        $this->class = $classname;
+        $this->classname = $classname;
         $this->property = $property;
         $this->relation = $relation;
         $this->column = $column;
@@ -40,6 +40,21 @@ class Relation implements PropertyInterface {
         return $this->property;
     }
 
+    public function type()
+    {
+        return $this->classname();
+    }
+
+    public function isId()
+    {
+        return false;
+    }
+
+    public function isValueObject()
+    {
+        return true;
+    }
+
     public function relation()
     {
         return $this->relation;
@@ -52,6 +67,6 @@ class Relation implements PropertyInterface {
 
     public function classname()
     {
-        return $this->name;
+        return $this->classname;
     }
 } 
