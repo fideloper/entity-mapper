@@ -149,7 +149,8 @@ class Builder {
 
     /**
      * Dynamically handle calls into the query instance.
-     *
+     * Returns $this, instead of Illuminate\Database\Query\Builder
+     * unless a passthru method is used
      * @param  string  $method
      * @param  array   $parameters
      * @return mixed

@@ -86,6 +86,15 @@ class Repository {
     }
 
     /**
+     * Get the EntityMapper instance
+     * @return EntityMapper
+     */
+    public function getMapper()
+    {
+        return $this->mapper;
+    }
+
+    /**
      * Get new Query Builder to build
      * entities for Select operations
      * @return Builder
