@@ -197,7 +197,7 @@ class EntityMapper {
      * @param $class
      * @return \EntityMapper\Reflector\Entity
      */
-    public function entity($class)
+    protected function entity($class)
     {
         if( ! is_string($class) )
         {
