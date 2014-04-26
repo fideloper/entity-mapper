@@ -97,19 +97,25 @@ class Builder {
     {
         $results = $this->query->get($columns);
 
-        // Magic
         $entities = $this->entityMapper->create($this->entity, $results);
 
         return $entities;
     }
 
+    public function save($entity)
+    {
+        // Gather Relations (via EntityMapper)
+        // Save those Relations separately via their Repositories
+        return $this->saveEntity($entity);
+    }
+
     /**
-     * Insert or Update an Entity
+     * Insert or Update a single Entity
      * @param $entity
      * @throws \DomainException
      * @return mixed
      */
-    public function save($entity)
+    public function saveEntity($entity)
     {
         $idColumn = $this->entityMapper->idColumn($this->entity);
 
