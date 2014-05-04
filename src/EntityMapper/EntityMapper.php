@@ -234,6 +234,11 @@ class EntityMapper {
         return $this->entity($class)->table();
     }
 
+    /**
+     * Return related entities
+     * @param $class
+     * @return static
+     */
     public function relations($class)
     {
         return $this->entity($class)->properties()->relations();

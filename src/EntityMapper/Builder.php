@@ -105,17 +105,17 @@ class Builder {
     public function save($entity)
     {
         // Gather Relations (via EntityMapper)
-        $relations = $this->entityMapper->relations($entity);
+        $relations = $this->entityMapper->relations($entity); // Return array of concrete entities, not Reflector\Relation! - user getters
 
         /* TODO: Finish attempting to save relationships...and oh yeah, build relationship classes...
                  1:m/m:1 and m:m will need collection-type treatment
         // Map relationships to relationship objects, each with own query builder
-        // which will save the relationship properties (entites) separately
+        // which will save the relationship properties (entities) separately
         foreach( $relations as $relationship )
         {
             // Does this belong inside of EntityMapper?
             $property = $relationship->property();
-            $relatedEntity = $entity->$property;
+            $relatedEntity = $entity->$property; // What about getters?
             //  Via repository? Via EntityMapper\Builder?
             // Yes, this is a protected property!
             $builder = new static($this->query, $relatedEntity, $this->entityMapper);
@@ -163,6 +163,15 @@ class Builder {
     public function setTable($table)
     {
         $this->from($table);
+    }
+
+    /**
+     * Return base query
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function getQuery()
+    {
+        return $this->query;
     }
 
     /**
